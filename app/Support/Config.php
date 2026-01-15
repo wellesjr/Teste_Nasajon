@@ -26,7 +26,6 @@ final class Config
     public static function accessToken(?string $cliToken = null): ?string
     {
         if ($cliToken) return $cliToken;
-        $env = getenv('ACCESS_TOKEN');
-        return $env !== false ? $env : null;
+        return Env::get('ACCESS_TOKEN');
     }
 }

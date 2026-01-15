@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+require __DIR__ . '/../app/Support/Env.php';
+\App\Support\Env::load(__DIR__ . '/../.env');
 
 require __DIR__ . '/../app/Support/Config.php';
 require __DIR__ . '/../app/Support/HttpClient.php';
