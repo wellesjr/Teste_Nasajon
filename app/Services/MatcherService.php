@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -24,14 +25,12 @@ final class MatcherService
     {
         $key = Normalizer::name($input);
 
-        // exato
         if (isset($this->index[$key])) {
             $list = $this->index[$key];
             if (count($list) === 1) return ['status' => 'OK', 'municipio' => $list[0]];
             return ['status' => 'AMBIGUO', 'municipio' => $list[0]];
         }
 
-        // fuzzy (Levenshtein)
         $best = null;
         $bestDist = PHP_INT_MAX;
 
@@ -44,7 +43,7 @@ final class MatcherService
         }
 
         $len = max(strlen($key), 1);
-        $limit = ($len <= 8) ? 2 : (($len <= 14) ? 3 : 4);
+        $limit = ($len <= 8) ? 2 : 2;
 
         if ($best && $bestDist <= $limit) {
             return ['status' => 'OK', 'municipio' => $best];
