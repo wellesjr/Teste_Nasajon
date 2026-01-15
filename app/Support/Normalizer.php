@@ -12,8 +12,8 @@ final class Normalizer
         $conv = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s);
         if ($conv !== false) $s = $conv;
 
-        $s = preg_replace('/[^a-z0-9\s]/', ' ', $s) ?? $s;
-        $s = preg_replace('/\s+/', ' ', $s) ?? $s;
+        $s = preg_replace('/[^a-z0-9\s]/', '', $s) ?? $s;
+        $s = preg_replace('/\s+/', '', $s) ?? $s;
 
         return trim($s);
     }
