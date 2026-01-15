@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -10,7 +11,6 @@ use App\Support\Normalizer;
 
 final class IbgeService
 {
-    /** @return array{ok:bool, data: MunicipioIbge[]} */
     public function loadMunicipios(): array
     {
         try {
@@ -36,13 +36,20 @@ final class IbgeService
 
     private function saveCache(array $raw): void
     {
-        file_put_contents(Config::cacheFile(), json_encode([
+        $file = \App\Support\Config::cacheFile();
+        $dir = dirname($file);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        file_put_contents($file, json_encode([
             'fetched_at' => date('c'),
             'data' => $raw,
         ], JSON_UNESCAPED_UNICODE));
     }
 
-    /** @return MunicipioIbge[] */
+
     private function mapMunicipios(array $raw): array
     {
         $out = [];

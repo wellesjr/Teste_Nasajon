@@ -17,6 +17,8 @@ final class HttpClient
             CURLOPT_TIMEOUT => $timeout,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_HTTPHEADER => ['Accept: application/json'],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
         ]);
         $body = curl_exec($ch);
         $err  = curl_error($ch);
@@ -49,6 +51,8 @@ final class HttpClient
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $token,
             ],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
         ]);
 
         $body = curl_exec($ch);
