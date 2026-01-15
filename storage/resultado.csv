@@ -1,0 +1,11 @@
+municipio_input,populacao_input,municipio_ibge,uf,regiao,id_ibge,status
+Niteroi,515317,,,,,ERRO_API
+"Sao Gonçalo",1091737,,,,,ERRO_API
+"Sao Paulo",12396372,,,,,ERRO_API
+"Belo Horzionte",2530701,,,,,ERRO_API
+Florianopolis,516524,,,,,ERRO_API
+"Santo Andre",723889,,,,,ERRO_API
+"Santoo Andre",700000,,,,,ERRO_API
+"Rio de Janeiro",6718903,,,,,ERRO_API
+Curitba,1963726,,,,,ERRO_API
+Brasilia,3094325,,,,,ERRO_API
