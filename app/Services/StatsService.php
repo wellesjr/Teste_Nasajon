@@ -37,20 +37,22 @@ final class StatsService
             'medias_por_regiao' => [],
         ];
 
-        $sum = [];
-        $cnt = [];
+        $populacaoPorRegiao = [];
+        $municipiosPorRegiao = [];
 
-        foreach ($resultadoRows as $r) {
-            $status = $r['status'] ?? '';
+        foreach ($resultadoRows as $resultado) {
+            $status = $resultado['status'] ?? '';
+            
             if ($status === 'OK') {
                 $stats['total_ok']++;
-                $pop = (int)($r['populacao_input'] ?? 0);
-                $stats['pop_total_ok'] += $pop;
+                $populacao = (int)($resultado['populacao_input'] ?? 0);
+                $stats['pop_total_ok'] += $populacao;
 
-                $reg = (string)($r['regiao'] ?? '');
-                if ($reg !== '') {
-                    $sum[$reg] = ($sum[$reg] ?? 0) + $pop;
-                    $cnt[$reg] = ($cnt[$reg] ?? 0) + 1;
+                $regiao = (string)($resultado['regiao'] ?? '');
+
+                if ($regiao !== '') {
+                    $populacaoPorRegiao[$regiao] = ($populacaoPorRegiao[$regiao] ?? 0) + $populacao;
+                    $municipiosPorRegiao[$regiao] = ($municipiosPorRegiao[$regiao] ?? 0) + 1;
                 }
             } elseif ($status === 'NAO_ENCONTRADO' || $status === 'AMBIGUO') {
                 $stats['total_nao_encontrado']++;
@@ -59,8 +61,8 @@ final class StatsService
             }
         }
 
-        foreach ($sum as $reg => $s) {
-            $stats['medias_por_regiao'][$reg] = round($s / $cnt[$reg], 2);
+        foreach ($populacaoPorRegiao as $regiao => $populacaoTotal) {
+            $stats['medias_por_regiao'][$regiao] = round($populacaoTotal / $municipiosPorRegiao[$regiao]);
         }
 
         return $stats;
