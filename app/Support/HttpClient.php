@@ -8,6 +8,16 @@ use RuntimeException;
 
 final class HttpClient
 {
+    /**
+     * Realiza uma requisição HTTP GET e retorna o corpo da resposta como array JSON.
+     *
+     * @param string $url URL completa para a requisição GET
+     * @param int $timeout Tempo limite em segundos para a requisição (padrão: 25)
+     * 
+     * @return array Dados decodificados do JSON retornado pela API
+     * 
+     * @throws RuntimeException Se a requisição falhar (código HTTP fora de 2xx) ou se o JSON for inválido
+     */
     public static function getJson(string $url, int $timeout = 25): array
     {
         $ch = curl_init($url);
@@ -34,6 +44,23 @@ final class HttpClient
         return $json;
     }
 
+    /**
+     * Realiza uma requisição POST com payload JSON para a URL especificada.
+     *
+     * Envia dados codificados em JSON via POST HTTP usando cURL, incluindo token de
+     * autenticação Bearer e headers apropriados. A verificação SSL é desabilitada
+     * por padrão.
+     *
+     * @param string $url URL de destino para a requisição POST
+     * @param array $payload Dados que serão codificados em JSON e enviados no corpo da requisição
+     * @param string $token Token de autenticação Bearer para o header Authorization
+     * @param int $timeout Tempo máximo em segundos para aguardar a resposta (padrão: 25)
+     *
+     * @return array Array decodificado da resposta JSON recebida
+     *
+     * @throws RuntimeException Se a requisição falhar (código HTTP fora do range 200-299),
+     *                         ocorrer erro no cURL ou a resposta não for um JSON válido
+     */
     public static function postJson(string $url, array $payload, string $token, int $timeout = 25): array
     {
         $data = json_encode($payload, JSON_UNESCAPED_UNICODE);

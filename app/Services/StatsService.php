@@ -5,6 +5,27 @@ namespace App\Services;
 
 final class StatsService
 {
+    /**
+     * Calcula estatísticas sobre os resultados do processamento de municípios.
+     *
+     * Este método processa um array de resultados de municípios e gera estatísticas
+     * agregadas, incluindo totais por status, população total e médias populacionais
+     * por região.
+     *
+     * @param array $resultadoRows Array de resultados contendo informações dos municípios.
+     *                            Cada elemento deve conter as chaves:
+     *                            - 'status': Status do processamento ('OK', 'NAO_ENCONTRADO', 'AMBIGUO', 'ERRO_API')
+     *                            - 'populacao_input': População do município (quando status é 'OK')
+     *                            - 'regiao': Região do município (quando status é 'OK')
+     *
+     * @return array Array associativo contendo as seguintes estatísticas:
+     *               - 'total_municipios': Número total de municípios processados
+     *               - 'total_ok': Quantidade de municípios processados com sucesso
+     *               - 'total_nao_encontrado': Quantidade de municípios não encontrados ou ambíguos
+     *               - 'total_erro_api': Quantidade de erros na API
+     *               - 'pop_total_ok': População total dos municípios processados com sucesso
+     *               - 'medias_por_regiao': Array associativo com a média populacional por região
+     */
     public function compute(array $resultadoRows): array
     {
         $stats = [

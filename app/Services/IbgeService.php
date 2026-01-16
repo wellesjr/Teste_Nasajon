@@ -11,6 +11,18 @@ use App\Support\Normalizer;
 
 final class IbgeService
 {
+    /**
+     * Carrega a lista de municípios do IBGE
+     * 
+     * Tenta carregar os dados do cache primeiro. Caso não exista cache,
+     * busca os dados da API do IBGE, salva no cache e retorna os municípios mapeados.
+     * 
+     * @return array Array associativo contendo:
+     *               - 'ok' (bool): Indica se a operação foi bem-sucedida
+     *               - 'data' (array): Lista de municípios mapeados ou array vazio em caso de erro
+     * 
+     * @throws \Throwable Em caso de falha na requisição ou processamento dos dados
+     */
     public function loadMunicipios(): array
     {
         try {
@@ -26,6 +38,15 @@ final class IbgeService
         }
     }
 
+    /**
+     * Carrega os dados do cache armazenado em arquivo.
+     * 
+     * Verifica se o arquivo de cache existe e, caso exista, decodifica o JSON
+     * e retorna os dados armazenados. Se o arquivo não existir ou os dados
+     * estiverem em formato inválido, retorna um array vazio.
+     * 
+     * @return array Os dados armazenados em cache ou array vazio se não houver cache válido
+     */
     private function loadFromCache(): array
     {
         $file = Config::cacheFile();
@@ -34,6 +55,16 @@ final class IbgeService
         return is_array($json) && isset($json['data']) ? (array)$json['data'] : [];
     }
 
+    /**
+     * Salva os dados em cache no sistema de arquivos.
+     *
+     * Este método é responsável por persistir os dados brutos recebidos da API do IBGE
+     * em um arquivo de cache no formato JSON. Cria o diretório de cache caso não exista
+     * e armazena os dados junto com a data/hora em que foram obtidos.
+     *
+     * @param array $raw Dados brutos a serem armazenados em cache
+     * @return void
+     */
     private function saveCache(array $raw): void
     {
         $file = \App\Support\Config::cacheFile();
@@ -50,6 +81,21 @@ final class IbgeService
     }
 
 
+    /**
+     * Mapeia os dados brutos de municípios do IBGE para objetos MunicipioIbge.
+     *
+     * Transforma um array de dados brutos da API do IBGE em uma coleção de objetos
+     * MunicipioIbge, extraindo informações como ID, nome, UF, região e gerando
+     * uma chave normalizada para o município.
+     *
+     * @param array $raw Array de dados brutos dos municípios obtidos da API do IBGE.
+     *                   Cada elemento deve conter 'id', 'nome' e estrutura aninhada
+     *                   com 'microrregiao.mesorregiao.UF.sigla' e
+     *                   'microrregiao.mesorregiao.UF.regiao.nome'.
+     *
+     * @return array Array de objetos MunicipioIbge contendo os dados processados.
+     *               Municípios sem ID ou nome são ignorados.
+     */
     private function mapMunicipios(array $raw): array
     {
         $out = [];
